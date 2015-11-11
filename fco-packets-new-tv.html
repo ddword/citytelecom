@@ -1,0 +1,1609 @@
+<!doctype html>
+<html>
+	<head lang="ru">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+    <div class="fco-packages">
+        <div class="fco-main">
+        </div>
+        <p style="margin-top: 20px;">
+            К каждому пакету можно подключить следующие доп. пакеты (доп. пакеты без основных не продаются):
+        </p>
+        <div class="fco-dop">
+        </div>
+    </div>
+    <div id="calc" style="margin-top: 20px;">
+        <span id="total">Всего к оплате:</span>
+        <span id="price"></span>
+        <span id="rub">руб.</span>
+    </div>
+    <div class="fco-order-form" style="margin-top: 20px;">
+        <div class="fco-wrapper">
+            <form method="post">
+                <div class="fco-cell">
+                    <div class="fco-field">
+                        <input type="text" class="fco-name" name="name" placeholder="Имя">
+                    </div>
+                </div>
+
+                <div class="fco-cell">
+                    <div class="fco-field">
+                        <input type="text" class="fco-phone" name="phone" placeholder="Телефон">
+                    </div>
+                </div>
+
+               <!--<div class="fco-cell">
+                    <div class="fco-field">
+                        <select name="package">
+                            <option value="free">Promo</option>
+                            <option value="base">Base</option>
+                            <option value="superbase">Superbase</option>
+                        </select>
+                    </div>
+                </div>-->
+                <div class="fco-cell">
+                    <div class="fco-field">
+                        <input name="package">
+                    </div>
+                </div>
+                <div class="fco-cell">
+                    <div class="fco-field">
+                        <input type="text" class="fco-summ" name="summ" style="display: none;">
+                    </div>
+                </div>
+                <div class="fco-cell">
+                    <div class="fco-button" onclick="videoDemand()">
+                        <span>Отправить заявку</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style>
+        .fco-packages{
+            width: 700px;
+        }
+        .fco-packages .fco-main,
+        .fco-packages .fco-dop{
+            border-collapse: separate;
+            border-spacing: 10px;
+            display: table;
+            position: relative;
+            width: 100%;
+        }
+        .fco-package-item{
+            display: table-cell;
+            /*display: block;
+            float: left;*/
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid transparent;
+            padding: 0px 5px 15px 5px;
+            width: 30%;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .fco-package-item.clicked{
+            border: 1px solid #808080;
+        }
+        .fco-package-item .fco-label{
+            padding: 15px 0;
+            margin: 0;
+            color: #6B8EC5;
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .fco-package-item .fco-list{
+            display: none;
+            top: 24%;
+            padding: 15px;
+            width: 25%;
+            position: absolute;
+            z-index: 4;
+            max-height: 525px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .fco-package-item .fco-list .fco-close{
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-image: url('http://www.citytelecom.ru/img/close_button.png');
+            top: 10px;
+            right: 10px;
+            color: #6a81d7;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .fco-package-item .fco-list .fco-clearboth{
+            clear: both;
+        }
+        .fco-package-item .fco-list ul{
+            list-style: none;
+            text-align: left;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+        .fco-package-item .fco-list ul li{
+            font-weight: bold;
+        }
+        .fco-package-item .fco-list ul li ul{
+            list-style: none;
+            font-weight: normal;
+            padding-left: 20px;
+            width: 93%;
+        }
+        .fco-package-item .fco-list ul li ul li{
+            font-weight: normal;
+        }
+        .fco-package-item img{
+            width: 94px;
+            height: 81px;
+        }
+        .fco-package-item .fco-price{
+            margin-top: 20px;
+        }
+        /*.fco-package-item .fco-icon{
+            background-image: url(http://www.citytelecom.ru/images/iptv/packages.png);
+            content: '';
+            display: inline-block;
+            width: 94px;
+            height: 81px;
+        }*/
+    </style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+	var ChannelData = {
+        "Promo":[
+            {
+                "type":"Эфирные",
+                "title":"2x2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"5 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"8 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Домашний"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Звезда"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Муз-ТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"НТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ОТР"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Первый канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"РенТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 1"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 24"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия К"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия HD"
+            },
+            {
+                "type":"Эфирные",
+                "title":"СТС"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ Центр"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ3"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Disney"
+            },
+            {
+                "type":"Детские",
+                "title":"Карусель"
+            },
+            {
+                "type":"Детские",
+                "title":"Радость моя"
+            },
+            {
+                "type":"Детские",
+                "title":"Улыбка ребенка"
+            },
+            {
+                "type":"Детские",
+                "title":"Мульт"
+            },
+            {
+                "type":"Спорт",
+                "title":"Боец"
+            },
+            {
+                "type":"Спорт",
+                "title":"Бойцовский клуб"
+            },
+            {
+                "type":"Спорт",
+                "title":"Спорт"
+            },
+            {
+                "type":"Спорт",
+                "title":"Футбол"
+            },
+            {
+                "type":"Познавательные",
+                "title":"24 DOC"
+            },
+            {
+                "type":"Познавательные",
+                "title":"360 Подмосковье"
+            },
+            {
+                "type":"Познавательные",
+                "title":"365 дней ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Авто Плюс"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Беларусь 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Вместе-РФ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Инва Медиа ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Интересное ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"История"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Кухня ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мама"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мир"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Москва Доверие"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Моя Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Нано ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Наука 2.0"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый канал HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый образовательный СГУ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"РБК ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Союз"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Спас"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Страна"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТБН Россия"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Техно 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТРО"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Успех"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Шант"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Amazing Life"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Pro Бизнес"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today Док HD"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Парк Развлечений"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Перец"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Пятница!"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Сарафан"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"ТНТ"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Точка"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Ю"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Global Star"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Style TV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"World Fashion Channel"
+            },
+            {
+                "type":"Новости",
+                "title":"Мир 24"
+            },
+            {
+                "type":"Новости",
+                "title":"Москва 24"
+            },
+            {
+                "type":"Новости",
+                "title":"LifeNews"
+            },
+            {
+                "type":"Новости",
+                "title":"NHK World TV"
+            },
+            {
+                "type":"Новости",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Кино",
+                "title":"Индия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Кино ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Комедия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"МНОГО ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"НСТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский бестселлер"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский Роман"
+            },
+            {
+                "type":"Кино",
+                "title":"Zee TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Ля-Минор"
+            },
+            {
+                "type":"Музыка",
+                "title":"HardLife"
+            }
+        ],
+        "Base":[
+            {
+                "type":"Эфирные",
+                "title":"2x2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"5 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"8 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Домашний"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Европа Плюс ТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Звезда"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Муз-ТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"НТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ОТР"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Первый канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"РенТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 1"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 24"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия К"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия HD"
+            },
+            {
+                "type":"Эфирные",
+                "title":"СТС"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ Центр"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ3"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Disney"
+            },
+            {
+                "type":"Детские",
+                "title":"Карусель"
+            },
+            {
+                "type":"Детские",
+                "title":"Радость моя"
+            },
+            {
+                "type":"Детские",
+                "title":"Улыбка ребенка"
+            },
+            {
+                "type":"Детские",
+                "title":"Cartoon Network"
+            },
+            {
+                "type":"Детские",
+                "title":"Nickelodeon"
+            },
+            {
+                "type":"Детские",
+                "title":"Мульт"
+            },
+            {
+                "type":"Спорт",
+                "title":"Боец"
+            },
+            {
+                "type":"Спорт",
+                "title":"Бойцовский клуб"
+            },
+            {
+                "type":"Спорт",
+                "title":"Спорт"
+            },
+            {
+                "type":"Спорт",
+                "title":""
+            },
+            {
+                "type":"Спорт",
+                "title":"Футбол"
+            },
+            {
+                "type":"Спорт",
+                "title":""
+            },
+            {
+                "type":"Спорт",
+                "title":"НТВ плюс Спорт плюс"
+            },
+            {
+                "type":"Познавательные",
+                "title":"24 DOC"
+            },
+            {
+                "type":"Познавательные",
+                "title":"360 Подмосковье"
+            },
+            {
+                "type":"Познавательные",
+                "title":"365 дней ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Авто Плюс"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Беларусь 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Вместе-РФ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Инва Медиа ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"История"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Кухня ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мама"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мир"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Москва Доверие"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Моя Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Нано ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Наука 2.0"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый канал HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый образовательный СГУ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"РБК ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Совершенно Секретно"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Союз"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Спас"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Страна"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТБН Россия"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Техно 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТРО"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Успех"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Шант"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Amazing Life"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Animal Planet"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Arte HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Discovery"
+            },
+            {
+                "type":"Познавательные",
+                "title":"English club"
+            },
+            {
+                "type":"Познавательные",
+                "title":"History"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Pro Бизнес"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today Док HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russian Travel Guide"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Travel Channel"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Парк Развлечений"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Еда"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Перец"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Пятница!"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Сарафан"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"СТС Love"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"ТНТ"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"ТНТ Комедия"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Точка"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Ю"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Юмор Box"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Fashion TV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Global Star"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"STV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Style TV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"TLC"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"World Fashion Channel"
+            },
+            {
+                "type":"Новости",
+                "title":"Мир 24"
+            },
+            {
+                "type":"Новости",
+                "title":"Москва 24"
+            },
+            {
+                "type":"Новости",
+                "title":"BBC World News"
+            },
+            {
+                "type":"Новости",
+                "title":"Bloomberg"
+            },
+            {
+                "type":"Новости",
+                "title":"Deutsche Welle"
+            },
+            {
+                "type":"Новости",
+                "title":"Euronews"
+            },
+            {
+                "type":"Новости",
+                "title":"France 24"
+            },
+            {
+                "type":"Новости",
+                "title":"LifeNews"
+            },
+            {
+                "type":"Новости",
+                "title":"NHK World TV"
+            },
+            {
+                "type":"Новости",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Новости",
+                "title":"TV 5 Monde"
+            },
+            {
+                "type":"Кино",
+                "title":"Индия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Кино ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Комедия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"МНОГО ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"НСТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский бестселлер"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский Роман"
+            },
+            {
+                "type":"Кино",
+                "title":"AMEDIA 1"
+            },
+            {
+                "type":"Кино",
+                "title":"AMEDIA 2"
+            },
+            {
+                "type":"Кино",
+                "title":"Paramount Comedy HD"
+            },
+            {
+                "type":"Кино",
+                "title":"SET"
+            },
+            {
+                "type":"Кино",
+                "title":"Zee TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Ля-Минор"
+            },
+            {
+                "type":"Музыка",
+                "title":"A-One Hip-Hop Music Channel"
+            },
+            {
+                "type":"Музыка",
+                "title":"Bridge TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Dange TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"HardLife"
+            },
+            {
+                "type":"Музыка",
+                "title":"Music Box"
+            },
+            {
+                "type":"Музыка",
+                "title":"MTV Russia"
+            },
+            {
+                "type":"Музыка",
+                "title":"RU.TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"RUSONG TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Russian Music Box"
+            }
+        ],
+        "SuperBase":[
+            {
+                "type":"Эфирные",
+                "title":"2x2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"5 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"8 канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Домашний"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Европа Плюс ТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Звезда"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Муз-ТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"НТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ОТР"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Первый канал"
+            },
+            {
+                "type":"Эфирные",
+                "title":"РенТВ"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 1"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 2"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия 24"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия К"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Россия HD"
+            },
+            {
+                "type":"Эфирные",
+                "title":"СТС"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ Центр"
+            },
+            {
+                "type":"Эфирные",
+                "title":"ТВ3"
+            },
+            {
+                "type":"Эфирные",
+                "title":"Disney"
+            },
+            {
+                "type":"Детские",
+                "title":"Карусель"
+            },
+            {
+                "type":"Детские",
+                "title":"Радость моя"
+            },
+            {
+                "type":"Детские",
+                "title":"Улыбка ребенка"
+            },
+            {
+                "type":"Детские",
+                "title":"Cartoon Network"
+            },
+            {
+                "type":"Детские",
+                "title":"Nickelodeon"
+            },
+            {
+                "type":"Детские",
+                "title":"Nick Jr"
+            },
+            {
+                "type":"Детские",
+                "title":"TiJi"
+            },
+            {
+                "type":"Детские",
+                "title":"Мульт"
+            },
+            {
+                "type":"Спорт",
+                "title":"Боец"
+            },
+            {
+                "type":"Спорт",
+                "title":"Бойцовский клуб"
+            },
+            {
+                "type":"Спорт",
+                "title":"Спорт"
+            },
+            {
+                "type":"Спорт",
+                "title":"Спорт 1 HD"
+            },
+            {
+                "type":"Спорт",
+                "title":"Футбол"
+            },
+            {
+                "type":"Спорт",
+                "title":"Eurosport"
+            },
+            {
+                "type":"Спорт",
+                "title":"НТВ плюс Спорт плюс"
+            },
+            {
+                "type":"Познавательные",
+                "title":"24 DOC"
+            },
+            {
+                "type":"Познавательные",
+                "title":"360 Подмосковье"
+            },
+            {
+                "type":"Познавательные",
+                "title":"365 дней ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Авто Плюс"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Беларусь 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Вместе-РФ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Время"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Инва Медиа ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Интересное ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"История"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Кухня ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мама"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Мир"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Москва Доверие"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Моя Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Нано ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Наука 2.0"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Охотник и рыболов"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый канал HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Первый образовательный СГУ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"РБК ТВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Совершенно Секретно"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Союз"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Спас"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Страна"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТБН Россия"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Техно 24"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТНВ Планета"
+            },
+            {
+                "type":"Познавательные",
+                "title":"ТРО"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Успех"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Шант"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Amazing Life"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Animal Planet"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Arte HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Discovery"
+            },
+            {
+                "type":"Познавательные",
+                "title":"English club"
+            },
+            {
+                "type":"Познавательные",
+                "title":"History"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Pro Бизнес"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russia Today Док HD"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Russian Travel Guide"
+            },
+            {
+                "type":"Познавательные",
+                "title":"Travel Channel"
+            },
+            {
+                "type":"Познавательные",
+                "title":"World Business Channel"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Парк Развлечений"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Еда"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Перец"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Пятница!"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Сарафан"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"СТС Love"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"ТНТ"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"ТНТ Комедия"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Точка"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Ю"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Юмор Box"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Fashion One"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Fashion TV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Global Star"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"STV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"Style TV"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"TLC"
+            },
+            {
+                "type":"Развлекательные",
+                "title":"World Fashion Channel"
+            },
+            {
+                "type":"Новости",
+                "title":"Мир 24"
+            },
+            {
+                "type":"Новости",
+                "title":"Москва 24"
+            },
+            {
+                "type":"Новости",
+                "title":"BBC World News"
+            },
+            {
+                "type":"Новости",
+                "title":"Bloomberg"
+            },
+            {
+                "type":"Новости",
+                "title":"Deutsche Welle"
+            },
+            {
+                "type":"Новости",
+                "title":"Euronews"
+            },
+            {
+                "type":"Новости",
+                "title":"France 24"
+            },
+            {
+                "type":"Новости",
+                "title":"LifeNews"
+            },
+            {
+                "type":"Новости",
+                "title":"NHK World TV"
+            },
+            {
+                "type":"Новости",
+                "title":"Russia Today"
+            },
+            {
+                "type":"Новости",
+                "title":"Russia Today HD"
+            },
+            {
+                "type":"Новости",
+                "title":"TV 5 Monde"
+            },
+            {
+                "type":"Новости",
+                "title":"Дождь"
+            },
+            {
+                "type":"Кино",
+                "title":"Еврокино"
+            },
+            {
+                "type":"Кино",
+                "title":"Иллюзион +"
+            },
+            {
+                "type":"Кино",
+                "title":"Индия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Кино ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Комедия ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"МНОГО ТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"НСТВ"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский бестселлер"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский Иллюзион"
+            },
+            {
+                "type":"Кино",
+                "title":"Русский Роман"
+            },
+            {
+                "type":"Кино",
+                "title":"AMEDIA 1"
+            },
+            {
+                "type":"Кино",
+                "title":"AMEDIA 2"
+            },
+            {
+                "type":"Кино",
+                "title":"Paramount Comedy"
+            },
+            {
+                "type":"Кино",
+                "title":"SET"
+            },
+            {
+                "type":"Кино",
+                "title":"Sony Sci-Fi"
+            },
+            {
+                "type":"Кино",
+                "title":"Sony Turbo"
+            },
+            {
+                "type":"Кино",
+                "title":"Zee TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Ля-Минор"
+            },
+            {
+                "type":"Музыка",
+                "title":"Музыка Первого"
+            },
+            {
+                "type":"Музыка",
+                "title":"A-One Hip-Hop Music Channel"
+            },
+            {
+                "type":"Музыка",
+                "title":"Bridge TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Dange TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"HardLife"
+            },
+            {
+                "type":"Музыка",
+                "title":"Music Box"
+            },
+            {
+                "type":"Музыка",
+                "title":"RU.TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"RUSONG TV"
+            },
+            {
+                "type":"Музыка",
+                "title":"Russian Music Box"
+            },
+            {
+                "type":"Музыка",
+                "title":"VH1 Europe"
+            }
+        ],
+        "Our footbal":[
+            {
+                "type": "Развлекательные",
+                "title": "Our footbal"
+            }
+        ],
+        "Amedia":[
+            {
+                "type": "Развлекательные",
+                "title": "Amedia 1"
+            },
+            {
+                "type": "Развлекательные",
+                "title": "Amedia 2"
+            },
+            {
+                "type": "Развлекательные",
+                "title": "Amedia HIT"
+            },
+            {
+                "type": "Развлекательные",
+                "title": "Amedia Premium HD"
+            }
+        ],
+        "Rain":[
+        {
+            "type": "Развлекательные",
+            "title": "Rain"
+        }
+    ]
+    }
+	</script>
+	<script src="fco-packets-new-tv.js"></script>
+    <script>
+        function videoDemand() {
+            var $form = $('.fco-order-form form');
+            var data = {
+                submit: true
+            };
+            var $price = $('#calc').find('#price');
+            var ph = $price.html();
+            $form.find('input, select').each(function(i, field) {
+                var $field = $(this);
+                data[$field.attr('name')] = $field.val();
+            });
+            $form.find('input.fco-summ').val(ph);
+            $.ajax({
+                url: $form.attr('action') /*|| '/iptv.php'*/,
+                type: 'post',
+                data: data,
+                success: function(data) {
+                    $('.fco-error-box').html(data).show();
+                }
+            });
+        };
+    </script>
+	</body>
+</html>
