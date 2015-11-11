@@ -21,35 +21,37 @@
     <div class="fco-order-form" style="margin-top: 20px;">
         <div class="fco-wrapper">
             <form method="post">
-                <div class="fco-cell">
-                    <div class="fco-field">
-                        <input type="text" class="fco-name" name="name" placeholder="Имя">
+                <div class="fco-fieldset">
+                    <div class="fco-cell">
+                        <div class="fco-field">
+                            <input type="text" class="fco-name" name="name" placeholder="Имя">
+                        </div>
                     </div>
-                </div>
 
-                <div class="fco-cell">
-                    <div class="fco-field">
-                        <input type="text" class="fco-phone" name="phone" placeholder="Телефон">
+                    <div class="fco-cell">
+                        <div class="fco-field">
+                            <input type="text" class="fco-phone" name="phone" placeholder="Телефон">
+                        </div>
                     </div>
-                </div>
 
-               <!--<div class="fco-cell">
-                    <div class="fco-field">
-                        <select name="package">
-                            <option value="free">Promo</option>
-                            <option value="base">Base</option>
-                            <option value="superbase">Superbase</option>
-                        </select>
+                   <!--<div class="fco-cell">
+                        <div class="fco-field">
+                            <select name="package">
+                                <option value="free">Promo</option>
+                                <option value="base">Base</option>
+                                <option value="superbase">Superbase</option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <div class="fco-cell">
+                        <div class="fco-field">
+                            <input name="package">
+                        </div>
                     </div>
-                </div>-->
-                <div class="fco-cell">
-                    <div class="fco-field">
-                        <input name="package">
-                    </div>
-                </div>
-                <div class="fco-cell">
-                    <div class="fco-field">
-                        <input type="text" class="fco-summ" name="summ" style="display: none;">
+                    <div class="fco-cell">
+                        <div class="fco-field">
+                            <input type="text" class="fco-summ" name="summ" style="display: none;">
+                        </div>
                     </div>
                 </div>
                 <div class="fco-cell">
@@ -61,6 +63,7 @@
         </div>
     </div>
     <style>
+        #calc, .fco-order-form,
         .fco-packages{
             width: 700px;
         }
@@ -148,6 +151,23 @@
         .fco-package-item .fco-price{
             margin-top: 20px;
         }
+        .fco-fieldset{
+            margin-bottom: 10px;
+        }
+        .fco-fieldset .fco-cell{
+            width: 30%;
+        }
+        .fco-fieldset .fco-cell, .fco-cell{
+            display: inline-block;
+        }
+        .fco-button{text-align: center;
+        background: linear-gradient(to bottom, #aece2c, #97b615);
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #83a227;
+        border-radius: 4px;
+        line-height: 26px;
+        width: 200px;}
         /*.fco-package-item .fco-icon{
             background-image: url(http://www.citytelecom.ru/images/iptv/packages.png);
             content: '';
